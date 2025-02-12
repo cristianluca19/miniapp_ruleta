@@ -23,15 +23,16 @@ const authOptions: NextAuthOptions = {
     },
   ],
   callbacks: {
-    async session({ session, token }) {
-      session.user.verificationLevel = token.verificationLevel as string;
-      return session;
-    },
     async jwt({ token, user }) {
       if (user) token.verificationLevel = user.verificationLevel;
       return token;
     },
+    async session({ session, token }) {
+      session.user.verificationLevel = token.verificationLevel as string | undefined;
+      return session;
+    },
   },
+  debug: process.env.NODE_ENV === "development",
 };
 
 const handler = NextAuth(authOptions);
