@@ -2,7 +2,7 @@
 import { MiniKit, VerificationLevel, ISuccessResult } from "@worldcoin/minikit-js";
 import { useCallback, useState } from "react";
 
-export const VerifyBlock = () => {
+export default function VerifyBlock (){
   const [status, setStatus] = useState<string | null>(null);
 
   const handleVerify = useCallback(async () => {

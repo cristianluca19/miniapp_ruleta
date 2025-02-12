@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     {
       id: "worldcoin",
@@ -16,21 +17,23 @@ export const authOptions: NextAuthOptions = {
         return {
           id: profile.sub,
           name: profile.sub,
-          verificationLevel:
-            profile["https://id.worldcoin.org/v1"].verification_level,
+          verificationLevel: profile["https://id.worldcoin.org/v1"].verification_level,
         };
       },
     },
   ],
   callbacks: {
-    async jwt({ token }) {
-      token.userRole = "admin";
+    async jwt({ token, user }) {
+      if (user) token.verificationLevel = user.verificationLevel;
       return token;
     },
+    async session({ session, token }) {
+      session.user.verificationLevel = token.verificationLevel as string | undefined;
+      return session;
+    },
   },
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
 };
-
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
