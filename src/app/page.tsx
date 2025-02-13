@@ -1,8 +1,7 @@
 "use client";
-import { useSession, signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
-import SignIn from "@/components/SignIn";
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -15,10 +14,7 @@ export default function HomePage() {
   return (
     <div className="login-container">
       <h1 className="neon-title">⚡ Retro Ruleta 80s ⚡</h1>
-     {/* <Button onClick={() => signIn()} variant="primary" size="lg">
-        Iniciar sesión con World ID
-      </Button> */}
-     <SignIn/>
+     <Button variant="primary" size="lg"  onClick={() => signIn("worldcoin")}>Login 0.2</Button>;
     </div>
   );
 }
