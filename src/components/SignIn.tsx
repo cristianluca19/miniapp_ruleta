@@ -15,5 +15,5 @@ export default function SignIn(){
     );
   }
 
-  return <Button  onClick={() => signIn("worldcoin")}>Login</Button>;
+  return <Button  onClick={() => signIn("worldcoin")}>Login 0.1</Button>;
 };
