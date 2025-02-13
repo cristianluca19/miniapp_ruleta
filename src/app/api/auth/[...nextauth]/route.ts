@@ -1,7 +1,8 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 
 const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET, // 📌 Asegúrate de definir esta variable en Vercel
+
   providers: [
     {
       id: "worldcoin",
@@ -16,23 +17,32 @@ const authOptions: NextAuthOptions = {
       profile(profile) {
         return {
           id: profile.sub,
-          name: profile.sub,
-          verificationLevel: profile["https://id.worldcoin.org/v1"].verification_level,
+          name: profile.sub || "Usuario", // 📌 Si no hay nombre, se usa "Usuario" por defecto
+          verificationLevel:
+            profile["https://id.worldcoin.org/v1"]?.verification_level || "unknown", // 📌 Se usa "unknown" si no está definido
         };
       },
     },
   ],
+
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.verificationLevel = user.verificationLevel;
+      if (user && "verificationLevel" in user) {
+        token.verificationLevel = user.verificationLevel as string | undefined; // 📌 Se verifica antes de asignar
+      }
       return token;
     },
+
     async session({ session, token }) {
-      session.user.verificationLevel = token.verificationLevel as string | undefined;
+      session.user = {
+        ...session.user,
+        verificationLevel: token.verificationLevel as string | undefined, // 📌 Se asegura que sea del tipo correcto
+      };
       return session;
     },
   },
-  debug: process.env.NODE_ENV === "development",
+
+  debug: process.env.NODE_ENV === "development", // 📌 Activa logs solo en desarrollo
 };
 
 const handler = NextAuth(authOptions);

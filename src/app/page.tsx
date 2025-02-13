@@ -1,5 +1,4 @@
 "use client";
-"@/styles/globals.css";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
