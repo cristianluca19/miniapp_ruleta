@@ -1,21 +1,124 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-color: #000;
+  --neon-blue: #00eaff;
+  --neon-purple: #bd00ff;
+  --neon-pink: #ff007f;
+  --neon-orange: #ff8800;
+  --text-color: #ffffff;
+  --glow-blue: 0px 0px 10px var(--neon-blue);
+  --glow-purple: 0px 0px 10px var(--neon-purple);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  color: var(--text-color);
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Estilo para el título principal */
+.neon-title {
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: var(--neon-blue);
+  text-shadow: var(--glow-blue);
+  animation: neon-glow 1.5s infinite alternate;
+}
+
+@keyframes neon-glow {
+  0% { text-shadow: var(--glow-blue); }
+  100% { text-shadow: 0px 0px 20px var(--neon-purple); }
+}
+
+/* Contenedor de la pantalla de inicio */
+.login-container, .game-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Animación de fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilo para el pozo acumulado */
+.jackpot {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  color: var(--neon-orange);
+  text-shadow: var(--glow-purple);
+}
+
+/* Estilo del input para ingresar el número */
+.number-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1.2rem;
+  margin-top: 20px;
+  text-align: center;
+  border: 2px solid var(--neon-blue);
+  background: black;
+  color: var(--neon-blue);
+  outline: none;
+  box-shadow: var(--glow-blue);
+}
+
+.number-input::placeholder {
+  color: rgba(0, 234, 255, 0.6);
+}
+
+/* Botones estilo neón */
+button, .stats-button {
+  font-size: 1rem;
+  margin-top: 20px;
+  padding: 15px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  background: var(--neon-blue);
+  color: #000;
+  box-shadow: var(--glow-blue);
+  transition: all 0.3s ease;
+}
+
+button:hover, .stats-button:hover {
+  background: var(--neon-purple);
+  box-shadow: var(--glow-purple);
+}
+
+/* Modal de estadísticas */
+.stats-button {
+  width: 100%;
+  display: block;
+}
+
+/* Botón de logout */
+.logout-button {
+  background: var(--neon-pink);
+  box-shadow: 0px 0px 10px var(--neon-pink);
+  color: #000;
+}
+
+.logout-button:hover {
+  background: var(--neon-orange);
+  box-shadow: 0px 0px 15px var(--neon-orange);
 }

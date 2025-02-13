@@ -1,25 +1,23 @@
 "use client";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Button } from "@worldcoin/miniapps-ui-kit-react";
+import styles from "./globals.css";
 
-import SignIn from "@/components/SignIn";
-import VerifyBlock from "@/components/VerifyBlock";
-import Transaction from "@/components/Transaction";
-import VerifyButton from "@/components/VerifyButton";
+export default function HomePage() {
+  const { data: session } = useSession();
+  const router = useRouter();
 
-export default function Home() {
+  if (session) {
+    router.push("/game");
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold">Mini App de Worldcoin</h1>
-      
-      {/* Botón de Login */}
-      <SignIn />
-
-      {/* Botón de Verificación */}
-      <VerifyBlock />
-
-      {/* Botón de Transacción */}
-      <Transaction />
-
-      <VerifyButton />
+    <div className="login-container">
+      <h1 className="neon-title">⚡ Retro Ruleta 80s ⚡</h1>
+      <Button onClick={() => signIn()} variant="primary" size="large">
+        Iniciar sesión con World ID
+      </Button>
     </div>
   );
 }

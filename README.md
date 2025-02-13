@@ -34,3 +34,58 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+========================================================================================================
+SMART CONTRACT
+=======================================================================================================
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+/*
+Este contrato simula la acumulación del pozo en blockchain y permite a los jugadores participar.
+De momento, lo dejamos comentado porque aún no estamos desplegando en una red real.
+*/
+
+contract RuletaPozo {
+    address public owner;
+    address public lastWinner;
+    uint256 public jackpot;
+    uint256 public ticketPrice = 0.1 ether; // 0.1 WLD (simulado)
+
+    event GamePlayed(address indexed player, uint256 chosenNumber, uint256 winningNumber, bool won);
+    event JackpotWon(address indexed winner, uint256 amount);
+    event JackpotIncreased(uint256 newAmount);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function play(uint256 chosenNumber) public payable {
+        require(msg.value == ticketPrice, "Debe enviar exactamente 0.1 WLD");
+        require(chosenNumber >= 0 && chosenNumber <= 99, "Número fuera de rango");
+
+        uint256 winningNumber = random();
+        bool won = chosenNumber == winningNumber;
+
+        if (won) {
+            payable(msg.sender).transfer(jackpot);
+            lastWinner = msg.sender;
+            emit JackpotWon(msg.sender, jackpot);
+            jackpot = 0;
+        } else {
+            jackpot += msg.value;
+            emit JackpotIncreased(jackpot);
+        }
+
+        emit GamePlayed(msg.sender, chosenNumber, winningNumber, won);
+    }
+
+    function random() private view returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % 100;
+    }
+
+    function getJackpot() public view returns (uint256) {
+        return jackpot;
+    }
+}

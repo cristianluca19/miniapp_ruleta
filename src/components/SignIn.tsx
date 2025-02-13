@@ -1,5 +1,6 @@
 "use client";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { Button } from "@worldcoin/miniapps-ui-kit-react";
 
 export default function SignIn(){
   const { data: session } = useSession();
@@ -8,10 +9,10 @@ export default function SignIn(){
     return (
       <>
         <p>Bienvenido, {session.user?.name}</p>
-        <button onClick={() => signOut()}>Cerrar sesión</button>
+        <Button  onClick={() => signOut()}>Cerrar sesión</Button>
       </>
     );
   }
 
-  return <button onClick={() => signIn("worldcoin")}>Login</button>;
+  return <Button  onClick={() => signIn("worldcoin")}>Login</Button>;
 };
