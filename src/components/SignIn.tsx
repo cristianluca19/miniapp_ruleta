@@ -1,6 +1,7 @@
 "use client";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Button } from "@worldcoin/miniapps-ui-kit-react";
+import { Button } from "@worldcoin/mini-apps-ui-kit-react";
+
 
 export default function SignIn(){
   const { data: session } = useSession();
