@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       allowedOrigins: ["*"] // Permitir todas las solicitudes (ajusta según sea necesario)
     } 
   },
-  
+
   async headers() {
     return [
       {

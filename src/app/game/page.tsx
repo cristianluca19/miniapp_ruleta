@@ -14,6 +14,11 @@ export default function GamePage() {
     return <p>Debes iniciar sesión para jugar.</p>;
   }
 
+  const winnersData = [
+    { name: "Marty McFly", number: 42, amount: 10 },
+    { name: "Doc Brown", number: 88, amount: 20 }
+  ];
+
   return (
     <div className="game-container">
       <h1 className="neon-title">Retro Ruleta 80s 🎰</h1>
@@ -29,7 +34,7 @@ export default function GamePage() {
       <button className="stats-button" onClick={() => setIsModalOpen(true)}>
         📊 Estadísticas
       </button>
-      <WinnersModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {isModalOpen && <WinnersModal onClose={() => setIsModalOpen(false)} winners={winnersData} />}
       <button onClick={() => signOut()} className="logout-button">
         Cerrar sesión
       </button>

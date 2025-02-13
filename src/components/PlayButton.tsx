@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@worldcoin/miniapps-ui-kit";
+import { Button } from "@worldcoin/mini-apps-ui-kit-react";
 import { useState } from "react";
 
 export default function PlayButton({ number }: { number: number | "" }) {
