@@ -3,7 +3,6 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@worldcoin/mini-apps-ui-kit-react";
 import { useEffect, useState } from "react";
-import { stringify } from "querystring";
 
 export default function HomePage() { 
   const { data, status } = useSession(); 
@@ -25,12 +24,14 @@ export default function HomePage() {
         <div className="spinner"></div>
       ) : (
         <Button variant="primary" size="lg" onClick={() => signIn("worldcoin")}>
-          Login 0.3
+          Login 0.4
+        
         </Button>
       )}
       {readData && 
       <div>{JSON.stringify(data)}</div>
       }
+      { status && <div>{status}</div>}
     </div>
   );
 }
