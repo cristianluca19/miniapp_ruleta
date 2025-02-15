@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 
 const authOptions: NextAuthOptions = {
+  debug: true, 
   secret: process.env.NEXTAUTH_SECRET, // 📌 Asegúrate de definir esta variable en Vercel
 
   providers: [
@@ -41,8 +42,6 @@ const authOptions: NextAuthOptions = {
       return session;
     },
   },
-
-  debug: process.env.NODE_ENV === "development", // 📌 Activa logs solo en desarrollo
 };
 
 const handler = NextAuth(authOptions);
