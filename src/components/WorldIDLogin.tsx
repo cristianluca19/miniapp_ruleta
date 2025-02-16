@@ -28,7 +28,7 @@ export default function WorldIDLogin() {
     >
       <IDKitWidget
         action={process.env.NEXT_PUBLIC_WORLDCOIN_ACTION_ID || 'default_action_id'}
-        app_id={process.env.APP_ID}
+        app_id="app_8552501b4d2cd6b80c8045bfb0886096"
         onSuccess={handleSuccess}
         onError={handleError}
       >
