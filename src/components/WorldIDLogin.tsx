@@ -1,6 +1,6 @@
 
 // components/WorldIDLogin.tsx
-import styles from './HomePage/HomePage.module.css'; 
+import styles from './Homepage/HomePage.module.css'; 
 import { useRouter } from 'next/router'
 import { IDKitWidget } from '@worldcoin/idkit'
 import React from 'react'
