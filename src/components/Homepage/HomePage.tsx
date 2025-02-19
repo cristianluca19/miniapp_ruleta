@@ -8,7 +8,9 @@ const HomePage: React.FC = () => {
   const router = useRouter();
 
   const handleLogin = async () => {
-
+    if (!MiniKit.isInstalled()) {
+      return
+    }
     const verifyPayload: VerifyCommandInput = {
       action: 'login-action', // Reemplaza con tu ID de acción del Developer Portal
       verification_level: VerificationLevel.Orb,
