@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { MiniKit, VerifyCommandInput, VerificationLevel } from '@worldcoin/minikit-js';
-import styles from './HomePage.module.css'; // Archivo CSS para estilos personalizados
+import styles from './HomePage.module.css'; 
 
 const HomePage: React.FC = () => {
   const router = useRouter();

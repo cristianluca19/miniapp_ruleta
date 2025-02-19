@@ -46,7 +46,7 @@ export default function WorldIDLogin() {
               cursor: 'pointer'
             }}
           >
-            Login 0.5
+            Login 0.6
           </button>
         )}
       </IDKitWidget>
