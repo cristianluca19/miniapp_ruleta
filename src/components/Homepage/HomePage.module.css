@@ -1,0 +1,27 @@
+/* HomePage.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('/images/retro_background.jpg'); /* Fondo con temática retro */
+    background-size: cover;
+  }
+  
+  .loginButton {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    color: #fff;
+    background-color: #ff00ff; /* Color neón */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive; /* Fuente retro */
+    text-shadow: 2px 2px #000;
+    transition: transform 0.3s;
+  }
+  
+  .loginButton:hover {
+    transform: scale(1.1);
+  }
+  
