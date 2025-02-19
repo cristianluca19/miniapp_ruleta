@@ -1,70 +1,113 @@
-// HomePage.tsx
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { MiniKit, VerifyCommandInput, VerificationLevel, ISuccessResult, ResponseEvent, MiniAppVerifyActionPayload } from '@worldcoin/minikit-js';
+"use client";
 import styles from './HomePage.module.css'; 
+import {
+  MiniKit,
+  VerificationLevel,
+  ISuccessResult,
+} from "@worldcoin/minikit-js";
+import { useState } from "react";
 
-const verifyPayload: VerifyCommandInput = {
-  action: 'login-action', // Asegúrate de que coincide con el Developer Portal
-  verification_level: VerificationLevel.Orb, // Orb | Device
-};
+export const HomePage = () => {
+  const [isVerifying, setIsVerifying] = useState(false);
 
-const HomePage: React.FC = () => {
-  const router = useRouter();
-  const [isVerified, setIsVerified] = useState(false); // Estado para saber si la verificación fue exitosa
+  const handleVerify = async () => {
+    if (!MiniKit.isInstalled()) {
+      alert("Please install the World App to verify");
+      return;
+    }
 
-  useEffect(() => {
-    const verifyUser = async () => {
-      if (!MiniKit.isInstalled()) {
-        console.error("MiniKit no está instalado. Asegúrate de abrir en World App.");
-        return;
+    try {
+      setIsVerifying(true);
+      const verifyPayload = {
+        action: 'app_8552501b4d2cd6b80c8045bfb0886096',
+        signal: "",
+        verification_level: VerificationLevel.Device,
+      };
+
+      const response = await MiniKit.commandsAsync.verify(verifyPayload);
+
+      if (response.finalPayload.status === "error") {
+        throw new Error("Verification failed");
       }
 
-      try {
-        console.log("🛠 Iniciando verificación automática con MiniKit...");
-        const { finalPayload } = await MiniKit.commandsAsync.verify(verifyPayload);
-        console.log("🔄 Respuesta de MiniKit:", finalPayload);
+      // Verify the proof in the backend
+      const verifyResponse = await fetch("/api/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          payload: response.finalPayload as ISuccessResult,
+          action: verifyPayload.action,
+          signal: verifyPayload.signal,
+        }),
+      });
 
-        if (finalPayload.status === 'error') {
-          console.error("❌ Error en la verificación:", finalPayload);
-          alert("Error en la verificación. Inténtalo nuevamente.");
-          return;
+      const data = await verifyResponse.json();
+
+      if (data.status === 200 && data.verifyRes.success) {
+        const address =
+          MiniKit.walletAddress || (window as any).MiniKit?.walletAddress;
+        if (!address) {
+          throw new Error("No wallet address found");
         }
 
-        // Verificar el proof en el backend
-        const verifyResponse = await fetch('/api/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            payload: finalPayload as ISuccessResult, // Solo los datos necesarios
-            action: 'login-action',
-          }),
-        });
+        // Add more detailed logging for the mint request
+        console.log("Preparing mint request with address:", address);
 
-        const verifyResponseJson = await verifyResponse.json();
-        console.log("🔄 Respuesta del backend:", verifyResponseJson);
+        try {
+          const mintResponse = await fetch("/api/mint", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              address: address,
+              // Add additional required fields if needed
+              // example: tokenAmount: 1,
+            }),
+          });
 
-        if (verifyResponse.ok) {
-          console.log("✅ Usuario verificado exitosamente!");
-          setIsVerified(true); // Habilitar el botón "Login"
-        } else {
-          console.error("❌ Error en la verificación del backend:", verifyResponseJson);
-          alert("Error en la verificación. Inténtalo nuevamente.");
+          if (!mintResponse.ok) {
+            const errorData = await mintResponse.json();
+            console.error("Mint API error details:", {
+              status: mintResponse.status,
+              statusText: mintResponse.statusText,
+              error: errorData,
+              requestBody: {
+                address: address,
+              },
+            });
+            throw new Error(
+              `Minting failed: ${errorData.message || "Bad Request"}`
+            );
+          }
+
+          const mintData = await mintResponse.json();
+          console.log("Mint API success response:", mintData);
+          alert("Verification and minting successful!");
+        } catch (mintError: any) {
+          console.error("Mint API error:", {
+            message: mintError.message,
+            stack: mintError.stack,
+            requestDetails: {
+              address: address,
+            },
+          });
+          throw new Error(`Mint API error: ${mintError.message}`);
         }
-      } catch (error) {
-        console.error("❌ Error en la verificación:", error);
-        alert("Hubo un problema con la verificación. Inténtalo nuevamente.");
+      } else {
+        throw new Error(data.verifyRes.message || "Verification failed");
       }
-    };
-
-    verifyUser();
-  }, []);
-
-  const handleLogin = () => {
-    if (isVerified) {
-      router.push('/game');
-    } else {
-      alert("Primero debes verificar tu identidad.");
+    } catch (error: any) {
+      console.error("Verification error:", {
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+      });
+      alert(`Error: ${error.message || "Verification failed"}`);
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -72,13 +115,10 @@ const HomePage: React.FC = () => {
     <div className={styles.container}>
       <button 
         className={styles.loginButton} 
-        onClick={handleLogin}
-        disabled={!isVerified} // Deshabilita el botón si no está verificado
+        onClick={handleVerify}
       >
-        {isVerified ? "Login 1.2" : "Verificando..."}
+        {isVerifying ? "Login 1.4" : "Verificando..."}
       </button>
     </div>
   );
 };
-
-export default HomePage;
