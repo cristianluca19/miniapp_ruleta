@@ -86,7 +86,7 @@ const HomePage: React.FC = () => {
   return (
     <div className={styles.container}>
       <button className={styles.loginButton} onClick={handleLogin}>
-        Login 0.9
+        Login 1.0
       </button>
     </div>
   );
