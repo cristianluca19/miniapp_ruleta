@@ -5,6 +5,7 @@ import {
   VerificationLevel,
   ISuccessResult,
 } from "@worldcoin/minikit-js";
+import router from 'next/router';
 import { useState } from "react";
 
 export const HomePage = () => {
@@ -19,7 +20,7 @@ export const HomePage = () => {
     try {
       setIsVerifying(true);
       const verifyPayload = {
-        action: 'app_8552501b4d2cd6b80c8045bfb0886096',
+        action: 'login-action',
         signal: "",
         verification_level: VerificationLevel.Device,
       };
@@ -46,56 +47,58 @@ export const HomePage = () => {
       const data = await verifyResponse.json();
 
       if (data.status === 200 && data.verifyRes.success) {
-        const address =
-          MiniKit.walletAddress || (window as any).MiniKit?.walletAddress;
-        if (!address) {
-          throw new Error("No wallet address found");
-        }
+
+        router.push('/game');
+        // const address =
+        //   MiniKit.walletAddress || (window as any).MiniKit?.walletAddress;
+        // if (!address) {
+        //   throw new Error("No wallet address found");
+        // }
 
         // Add more detailed logging for the mint request
-        console.log("Preparing mint request with address:", address);
+        // console.log("Preparing mint request with address:", address);
 
-        try {
-          const mintResponse = await fetch("/api/mint", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              address: address,
-              // Add additional required fields if needed
-              // example: tokenAmount: 1,
-            }),
-          });
+      //   try {
+      //     const mintResponse = await fetch("/api/mint", {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({
+      //         address: address,
+      //         // Add additional required fields if needed
+      //         // example: tokenAmount: 1,
+      //       }),
+      //     });
 
-          if (!mintResponse.ok) {
-            const errorData = await mintResponse.json();
-            console.error("Mint API error details:", {
-              status: mintResponse.status,
-              statusText: mintResponse.statusText,
-              error: errorData,
-              requestBody: {
-                address: address,
-              },
-            });
-            throw new Error(
-              `Minting failed: ${errorData.message || "Bad Request"}`
-            );
-          }
+      //     if (!mintResponse.ok) {
+      //       const errorData = await mintResponse.json();
+      //       console.error("Mint API error details:", {
+      //         status: mintResponse.status,
+      //         statusText: mintResponse.statusText,
+      //         error: errorData,
+      //         requestBody: {
+      //           address: address,
+      //         },
+      //       });
+      //       throw new Error(
+      //         `Minting failed: ${errorData.message || "Bad Request"}`
+      //       );
+      //     }
 
-          const mintData = await mintResponse.json();
-          console.log("Mint API success response:", mintData);
-          alert("Verification and minting successful!");
-        } catch (mintError: any) {
-          console.error("Mint API error:", {
-            message: mintError.message,
-            stack: mintError.stack,
-            requestDetails: {
-              address: address,
-            },
-          });
-          throw new Error(`Mint API error: ${mintError.message}`);
-        }
+      //     const mintData = await mintResponse.json();
+      //     console.log("Mint API success response:", mintData);
+      //     alert("Verification and minting successful!");
+      //   } catch (mintError: any) {
+      //     console.error("Mint API error:", {
+      //       message: mintError.message,
+      //       stack: mintError.stack,
+      //       requestDetails: {
+      //         address: address,
+      //       },
+      //     });
+      //     throw new Error(`Mint API error: ${mintError.message}`);
+      //   }
       } else {
         throw new Error(data.verifyRes.message || "Verification failed");
       }
@@ -117,7 +120,7 @@ export const HomePage = () => {
         className={styles.loginButton} 
         onClick={handleVerify}
       >
-        {isVerifying ? "Login 1.4" : "Verificando..."}
+        "Login 1.4"
       </button>
     </div>
   );
