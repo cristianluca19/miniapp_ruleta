@@ -11,7 +11,7 @@ interface IRequestPayload {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { payload, action, signal } = req.body as IRequestPayload;
-    const app_id = process.env.APP_ID as `app_${string}`; // Asegúrate de definir APP_ID en tus variables de entorno
+    const app_id = process.env.APP_ID as `app_${string}` || 'app_8552501b4d2cd6b80c8045bfb0886096'; // Asegúrate de definir APP_ID en tus variables de entorno
 
     try {
       const verifyRes: IVerifyResponse = await verifyCloudProof(payload, app_id, action, signal);

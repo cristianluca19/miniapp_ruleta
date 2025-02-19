@@ -1,4 +1,6 @@
+
 // components/WorldIDLogin.tsx
+import styles from '.HomePage/HomePage.module.css'; 
 import { useRouter } from 'next/router'
 import { IDKitWidget } from '@worldcoin/idkit'
 import React from 'react'
@@ -27,7 +29,7 @@ export default function WorldIDLogin() {
       }}
     >
       <IDKitWidget
-        action={process.env.NEXT_PUBLIC_WORLDCOIN_ACTION_ID || 'default_action_id'}
+        action={process.env.NEXT_PUBLIC_WORLDCOIN_ACTION_ID || 'login-action'}
         app_id="app_8552501b4d2cd6b80c8045bfb0886096"
         onSuccess={handleSuccess}
         onError={handleError}
@@ -35,18 +37,9 @@ export default function WorldIDLogin() {
         {({ open }) => (
           <button
             onClick={open}
-            style={{
-              padding: '20px 40px',
-              fontSize: '24px',
-              background: '#ff00ff',
-              color: '#00ffff',
-              border: 'none',
-              borderRadius: '10px',
-              boxShadow: '0 0 20px rgba(0,255,255,0.7)',
-              cursor: 'pointer'
-            }}
+            className={styles.loginButton}
           >
-            Login 0.6
+            Login 0.8
           </button>
         )}
       </IDKitWidget>
